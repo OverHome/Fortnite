@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/BaseOnline.unity
-    guid: 2b3fbc1f5fdfa4864a03edb01b145d5b
-  m_configObjects: {}
+    path: Assets/Scenes/TestVR.unity
+    guid: 9c845d638c64f784081961367717bdf9
+  m_configObjects:
+    Unity.XR.PICO.LivePreview.Settings: {fileID: 11400000, guid: ced6a232bd3048846992447a726d962d,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 0277b91d9ace0af488d8f5df3cb57812,
+      type: 2}
+    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 33dedde0ad390904581a5f3aa81d9192,
+      type: 2}
