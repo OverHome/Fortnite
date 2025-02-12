@@ -6,8 +6,10 @@ public class Tester : NetworkBehaviour
 {
     [SerializeField] private Player.Player _player;
     [SerializeField] private Weapon _weapon;
-    [SerializeField] private GameObject _isBuildingCollidedTester;
-    [SerializeField] private BuildingObject _buildingObject;
+    [SerializeField] private BuildingsPlacer _buildingsPlacer;
+    [SerializeField] private Transform _arm;
+    [SerializeField] private Camera _mainCamera;
+    [SerializeField] private BuildedObject _buildedObject;
 
     private void Start()
     {
@@ -26,7 +28,24 @@ public class Tester : NetworkBehaviour
             {
                 _player.ServerRpcFire();
             }
+            var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+            var point = ray.origin + ray.direction * 5f;
+            _arm.LookAt(point);
+            Debug.DrawLine(ray.origin, point, Color.red);
+
+            if(Input.GetMouseButtonDown(1))
+            {
+                _buildingsPlacer.StartPlacing(_buildedObject, _arm);
+            }
+            if(Input.GetMouseButton(1))
+            {
+                _buildingsPlacer.SetObjectPos(_arm);
+            }
+            if(Input.GetMouseButtonUp(1))
+            {
+                _buildingsPlacer.TryPlace();
+                _buildingsPlacer.EndPlacing();
+            }
         }
-        _isBuildingCollidedTester.SetActive(_buildingObject.IsCollided);
     }
 }

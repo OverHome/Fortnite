@@ -1,26 +1,89 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BuildingsPlacer : MonoBehaviour
 {
-    public BuildingObject PlaceObject { get; private set; }
+    [SerializeField] private BuildingObjectTemplate _template;
 
-    public void StartPlacing(BuildingObject placeObject, Vector3 pos)
+    public const float YOffset = .05f;
+
+    [field: SerializeField] public float RayDistance { get; private set; }
+    [field: SerializeField] public LayerMask RayMask { get; private set; }
+
+    public BuildedObject PlaceObjectPrefab { get; private set; }
+
+    public void StartPlacing(BuildedObject placeObjectPrefab, Vector3 pos)
     {
-        PlaceObject = placeObject;
+        PlaceObjectPrefab = placeObjectPrefab;
+        _template.SetNewTemplate(placeObjectPrefab);
         SetObjectPos(pos);
-        PlaceObject.gameObject.SetActive(true);
+        _template.gameObject.SetActive(true);
+    }
+
+    public bool TryPlace()
+    {
+        if (PlaceObjectPrefab == null || !_template.CanPlace())
+            return false;
+        var obj = Instantiate(
+            PlaceObjectPrefab,
+            _template.transform.position - Vector3.up * YOffset - PlaceObjectPrefab.BottomPoint,
+            Quaternion.identity,
+            transform);
+        return true;
     }
 
     public void EndPlacing()
     {
-        PlaceObject.gameObject.SetActive(false);
-        PlaceObject = null;
+        PlaceObjectPrefab = null;
+        _template.gameObject.SetActive(false);
     }
 
     public void SetObjectPos(Vector3 pos)
     {
-        PlaceObject.transform.position = pos - PlaceObject.BottomPoint;
+        _template.transform.position = pos + Vector3.up * YOffset;
+    }
+
+    public void StartPlacing(BuildedObject buildingObject, Transform arm)
+    {
+        var pos = GetRayCastPos(arm);
+        StartPlacing(buildingObject, pos);
+    }
+
+    public void SetObjectPos(Transform arm)
+    {
+        var pos = GetRayCastPos(arm, out var isCollide);
+        SetObjectPos(pos);
+        _template.IsOnFloor = isCollide;
+    }
+
+    public bool Raycast(Transform arm, out RaycastHit hit)
+    {
+        var ray = new Ray(arm.transform.position, arm.transform.forward);
+        return Physics.Raycast(ray, out hit, RayDistance, RayMask);
+    }
+
+    public Vector3 GetRayCastPos(Transform arm)
+    {
+        if(Raycast(arm, out var hit))
+        {
+            return hit.point;
+        }
+        else
+        {
+            return arm.transform.position + arm.transform.forward * RayDistance;
+        }
+    }
+
+    public Vector3 GetRayCastPos(Transform arm, out bool isCollide)
+    {
+        if (Raycast(arm, out var hit))
+        {
+            isCollide = true;
+            return hit.point;
+        }
+        else
+        {
+            isCollide = false;
+            return arm.transform.position + arm.transform.forward * RayDistance;
+        }
     }
 }
