@@ -37,10 +37,6 @@ public class Tester : NetworkBehaviour
             {
                 _buildingsPlacer.StartPlacing(_buildedObject, _arm);
             }
-            if(Input.GetMouseButton(1))
-            {
-                _buildingsPlacer.SetObjectPos(_arm);
-            }
             if(Input.GetMouseButtonUp(1))
             {
                 _buildingsPlacer.TryPlace();

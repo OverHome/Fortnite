@@ -10,6 +10,7 @@ public class BuildingsPlacer : MonoBehaviour
     [field: SerializeField] public LayerMask RayMask { get; private set; }
 
     public BuildedObject PlaceObjectPrefab { get; private set; }
+    public Transform Arm { get; private set; }
 
     public void StartPlacing(BuildedObject placeObjectPrefab, Vector3 pos)
     {
@@ -44,6 +45,7 @@ public class BuildingsPlacer : MonoBehaviour
 
     public void StartPlacing(BuildedObject buildingObject, Transform arm)
     {
+        Arm = arm;
         var pos = GetRayCastPos(arm);
         StartPlacing(buildingObject, pos);
     }
@@ -84,6 +86,14 @@ public class BuildingsPlacer : MonoBehaviour
         {
             isCollide = false;
             return arm.transform.position + arm.transform.forward * RayDistance;
+        }
+    }
+
+    private void Update()
+    {
+        if(Arm != null && PlaceObjectPrefab != null)
+        {
+            SetObjectPos(Arm);
         }
     }
 }

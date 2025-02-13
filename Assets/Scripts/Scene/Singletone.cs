@@ -9,12 +9,12 @@ public abstract class Singletone<T> : MonoBehaviour where T : Singletone<T>
         if(Instance == null)
         {
             Instance = this as T;
+            OnAwake();
         }
         else
         {
             Destroy(gameObject);
         }
-        OnAwake();
     }
 
     protected abstract void OnAwake();
