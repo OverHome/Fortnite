@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Player
 {
-    public class Player : NetworkBehaviour
+    public class Player : NetworkBehaviour, IDamageable
     {
         [field: SerializeField] public PlayerHealth Health { get; private set; }
         [field: SerializeField] public PlayerShooter Shooter { get; private set; }
@@ -24,6 +24,13 @@ namespace Player
         internal void ClientRpcGetDamage(int damage, int health)
         {
             Health.ClientGetDamage(damage, health);
+        }
+
+        [Server]
+        public void ServerGetDamage(int damage)
+        {
+            Health.ServerGetDamage(damage);
+            ClientRpcGetDamage(damage, Health.Health);
         }
     }
 }

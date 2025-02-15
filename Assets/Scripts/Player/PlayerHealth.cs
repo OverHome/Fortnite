@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Player
 {
     [Serializable]
-    public class PlayerHealth : IDamageable
+    public class PlayerHealth
     {
         [field: SerializeField, Min(1)] public int MaxHealth { get; private set; }
         public int Health { get; private set; }
@@ -19,7 +19,7 @@ namespace Player
             Health = MaxHealth;
         }
 
-        public void ServerGetDamage(int damage)
+        internal void ServerGetDamage(int damage)
         {
             Health -= damage;
             if(Health <= 0)
@@ -27,7 +27,6 @@ namespace Player
                 Health = 0;
                 Die();
             }
-            _player.ClientRpcGetDamage(damage, Health);
         }
 
         internal void ClientGetDamage(int damage, int health)
