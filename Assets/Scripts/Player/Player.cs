@@ -13,6 +13,8 @@ namespace Player
         [field: SerializeField] public PlayerHealth Health { get; private set; }
         [field: SerializeField] public PlayerShooter Shooter { get; private set; }
         
+        public InputActionReference _fireInputAction;
+        
         public override void OnStartClient()
         {
             base.OnStartClient();
@@ -34,30 +36,31 @@ namespace Player
         {
             Health.Initialize(this);
             Shooter.Initialize(this);
-        }
+            if (_fireInputAction != null)
+            {
+                _fireInputAction.action.Enable();
+                _fireInputAction.action.performed += ctx => { Shooter.HoldenWeapon.PlayShoot(); Shooter.Shoot(); };
+            }
 
-        private void Update()
-        {
-            transform.GetChild(1).transform.rotation = GetComponent<XROrigin>().Camera.transform.rotation;
+            Health.Died += player => Destroy(player.gameObject);
         }
-
-        [ServerRpc]
+        
         public void ServerRpcFire()
         {
             Shooter.Shoot();
         }
 
         [ObserversRpc]
-        internal void ClientRpcGetDamage(int damage, int health)
+        internal void ClientRpcGetDamage(int damage)
         {
-            Health.ClientGetDamage(damage, health);
+            Health.ClientGetDamage(damage);
         }
 
-        [Server]
+        [ServerRpc(RequireOwnership = false)]
         public void ServerGetDamage(int damage)
         {
-            Health.ServerGetDamage(damage);
-            ClientRpcGetDamage(damage, Health.Health);
+            ClientRpcGetDamage(damage);
+            print(Health.Health);
         }
     }
 }

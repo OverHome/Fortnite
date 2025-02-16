@@ -29,11 +29,13 @@ namespace Player
             }
         }
 
-        internal void ClientGetDamage(int damage, int health)
+        internal void ClientGetDamage(int damage)
         {
-            if(!_player.IsServer)
+            Health -= damage;
+            if(Health <= 0)
             {
-                Health = health;
+                Health = 0;
+                Die();
             }
             //Hit animations later
         }

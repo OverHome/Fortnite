@@ -1,6 +1,7 @@
 using Player.Weapons;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Player
 {
@@ -12,18 +13,15 @@ namespace Player
 
         [field: SerializeField] public Transform WeaponParent { get; private set; }
         [field: SerializeField] public LayerMask RayMask { get; private set; }
-        public Weapon HoldenWeapon { get; private set; }
+        [field: SerializeField] public Weapon HoldenWeapon { get; private set; }
 
         private Player _player;
-
-        public const int Damage = 10;
-
+        
         public void Initialize(Player player)
         {
             _player = player;
         }
-
-        //Server
+        
         public void Shoot()
         {
             if (HoldenWeapon == null)
@@ -31,15 +29,13 @@ namespace Player
 
             HoldenWeapon.ServerFire();
         }
-
-        //Server
+        
         public void ServerTakeWeapon(Weapon weapon)
         {
             SetWeaponPos(weapon);
             weapon.OnServerTakeWeapon(_player);
         }
-
-        //Client
+        
         public void ClientTakeWeapon(Weapon weapon)
         {
             SetWeaponPos(weapon);
