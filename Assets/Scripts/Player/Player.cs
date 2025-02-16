@@ -26,27 +26,50 @@ namespace Player
                 GetComponent<ActionBasedContinuousMoveProvider>().enabled = true;
                 GetComponent<ActionBasedSnapTurnProvider>().enabled = true;
                 GetComponent<XROrigin>().CameraFloorOffsetObject.SetActive(true);
+                GetComponent<VRTransmission>().enabled = true;
+                
+                if (_fireInputAction != null)
+                {
+                    _fireInputAction.action.Enable();
+                    _fireInputAction.action.performed += PlayerFire;
+
+                }
+                Health.Died += PlayerDie;
             }
             else
             {
-                this.enabled = false;
+                // this.enabled = false;
+            }
+
+            gameObject.name = "Player" + ObjectId;
+        }
+
+        public override void OnStopClient()
+        {
+            base.OnStopClient();
+            if (base.IsOwner)
+            {
+                if (_fireInputAction != null)
+                {
+                    _fireInputAction.action.Disable();
+                    _fireInputAction.action.performed -= PlayerFire;
+                }
+
+                Health.Died -= PlayerDie;
             }
         }
+        
+
         private void Awake()
         {
             Health.Initialize(this);
             Shooter.Initialize(this);
-            if (_fireInputAction != null)
-            {
-                _fireInputAction.action.Enable();
-                _fireInputAction.action.performed += ctx => { Shooter.HoldenWeapon.PlayShoot(); Shooter.Shoot(); };
-            }
-
-            Health.Died += player => Destroy(player.gameObject);
+            
         }
         
-        public void ServerRpcFire()
+        public void PlayerFire(InputAction.CallbackContext context)
         {
+            Shooter.HoldenWeapon.PlayShoot();
             Shooter.Shoot();
         }
 
@@ -54,13 +77,19 @@ namespace Player
         internal void ClientRpcGetDamage(int damage)
         {
             Health.ClientGetDamage(damage);
+            print(gameObject.name + " " + Health.Health);
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void ServerGetDamage(int damage)
         {
             ClientRpcGetDamage(damage);
-            print(Health.Health);
+        }
+
+        private void PlayerDie(Player player)
+        {
+            Destroy(player.gameObject);
+            NetworkManager.ClientManager.StopConnection();
         }
     }
 }

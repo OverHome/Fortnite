@@ -26,7 +26,7 @@ public class Tester : NetworkBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                _player.ServerRpcFire();
+                //_player.ServerRpcFire();
             }
             var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             var point = ray.origin + ray.direction * 5f;
