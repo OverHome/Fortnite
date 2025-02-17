@@ -12,8 +12,11 @@ namespace Player
     {
         [field: SerializeField] public PlayerHealth Health { get; private set; }
         [field: SerializeField] public PlayerShooter Shooter { get; private set; }
+        [field: SerializeField] public BuildingsPlacer BuildingsPlacer { get; private set; }
+        [field: SerializeField] public BuildedObject BuildingsObject { get; private set; }
         
         public InputActionReference _fireInputAction;
+        public InputActionReference _buildInputAction;
         
         public override void OnStartClient()
         {
@@ -34,6 +37,14 @@ namespace Player
                     _fireInputAction.action.performed += PlayerFire;
 
                 }
+                
+                if (_buildInputAction != null)
+                {
+                    _buildInputAction.action.Enable();
+                    _buildInputAction.action.started += PlayerBuildStart;
+                    _buildInputAction.action.canceled += PlayerBuildCancle;
+                }
+                
                 Health.Died += PlayerDie;
             }
             else
@@ -54,11 +65,17 @@ namespace Player
                     _fireInputAction.action.Disable();
                     _fireInputAction.action.performed -= PlayerFire;
                 }
+                
+                if (_buildInputAction != null)
+                {
+                    _buildInputAction.action.Disable();
+                    _buildInputAction.action.started -= PlayerBuildStart;
+                    _buildInputAction.action.canceled -= PlayerBuildCancle;;
+                }
 
                 Health.Died -= PlayerDie;
             }
         }
-        
 
         private void Awake()
         {
@@ -71,6 +88,17 @@ namespace Player
         {
             Shooter.HoldenWeapon.PlayShoot();
             Shooter.Shoot();
+        }
+        
+        public void PlayerBuildStart(InputAction.CallbackContext context)
+        {
+            BuildingsPlacer.StartPlacing(BuildingsObject, GetComponent<VRTransmission>().leftController.gameObject.transform);
+        }
+        
+        public void PlayerBuildCancle(InputAction.CallbackContext context)
+        {
+            BuildingsPlacer.TryPlace();
+            BuildingsPlacer.EndPlacing();
         }
 
         [ObserversRpc]

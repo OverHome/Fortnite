@@ -5,12 +5,12 @@ namespace Player
 {
     public class VRTransmission : MonoBehaviour
     {
-        [SerializeField] private Transform xrOrigin;
-        [SerializeField] private Transform mainCamera;
-        [SerializeField] private Transform rightController;
-        [SerializeField] private Transform leftController;
-        [SerializeField] private Transform mainBody;
-        [SerializeField] private Transform gunHolder;
+        [SerializeField] public Transform xrOrigin;
+        [SerializeField] public Transform mainCamera;
+        [SerializeField] public Transform rightController;
+        [SerializeField] public Transform leftController;
+        [SerializeField] public Transform mainBody;
+        [SerializeField] public Transform gunHolder;
 
         private void Update()
         {

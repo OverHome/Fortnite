@@ -1,6 +1,7 @@
+using FishNet.Object;
 using UnityEngine;
 
-public class BuildingsPlacer : MonoBehaviour
+public class BuildingsPlacer : NetworkBehaviour
 {
     [SerializeField] private BuildingObjectTemplate _template;
 
@@ -20,21 +21,32 @@ public class BuildingsPlacer : MonoBehaviour
         _template.gameObject.SetActive(true);
     }
 
+
     public bool TryPlace()
     {
         if (PlaceObjectPrefab == null || !_template.CanPlace())
             return false;
-        var obj = Instantiate(
-            PlaceObjectPrefab,
-            _template.transform.position - Vector3.up * YOffset - PlaceObjectPrefab.BottomPoint,
-            Quaternion.identity,
-            transform);
+        PlaceObjectServer(PlaceObjectPrefab,
+            _template.transform.position - Vector3.up * YOffset - PlaceObjectPrefab.BottomPoint);
         return true;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlaceObjectServer(BuildedObject buildedObject, Vector3 pos)
+    {
+        buildedObject.GetComponent<NetworkObject>().enabled = true;
+        var obj = Instantiate(
+            buildedObject, 
+            pos,
+            Quaternion.identity);
+        ;
+        ServerManager.Spawn(obj.gameObject);
+        buildedObject.GetComponent<NetworkObject>().enabled = false;
     }
 
     public void EndPlacing()
     {
-        PlaceObjectPrefab = null;
+        // PlaceObjectPrefab = null;
         _template.gameObject.SetActive(false);
     }
 
@@ -65,7 +77,7 @@ public class BuildingsPlacer : MonoBehaviour
 
     public Vector3 GetRayCastPos(Transform arm)
     {
-        if(Raycast(arm, out var hit))
+        if (Raycast(arm, out var hit))
         {
             return hit.point;
         }
@@ -91,7 +103,7 @@ public class BuildingsPlacer : MonoBehaviour
 
     private void Update()
     {
-        if(Arm != null && PlaceObjectPrefab != null)
+        if (Arm != null && PlaceObjectPrefab != null)
         {
             SetObjectPos(Arm);
         }
