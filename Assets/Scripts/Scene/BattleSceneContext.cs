@@ -1,8 +1,12 @@
-using System;
 using System.Collections.Generic;
+using Buildings;
+using UnityEngine;
 
 public class BattleSceneContext : Singletone<BattleSceneContext>
 {
+    [field: SerializeField] public BuildingsPlacer Placer { get; private set; }
+    [field: SerializeField] public BuildedObjectsCollection ObjectsCollection { get; private set; }
+    
     private readonly List<Player.Player> _players = new();
 
     public List<Player.Player> PlayersCopy => new(_players);
