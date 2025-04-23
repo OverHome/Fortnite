@@ -97,6 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80e9d1a9da0eeca49aa76bd7ba9fd438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
+  _networkObjectCache: {fileID: 0}
   <BottomPoint>k__BackingField: {x: 0, y: -0.5, z: 0}
 --- !u!135 &4180455283273006630
 SphereCollider:
