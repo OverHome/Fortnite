@@ -514,6 +514,55 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 1
+--- !u!1 &566932642
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 566932644}
+  - component: {fileID: 566932643}
+  m_Layer: 0
+  m_Name: BattleSceneContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &566932643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566932642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034e89faedcb3a141b67b51b193d8b78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Placer>k__BackingField: {fileID: 1579972290}
+  <ObjectsCollection>k__BackingField:
+    _objects:
+    - {fileID: 4147323708706159959, guid: 4d1332d6c176af84aa0207be799e9aec, type: 3}
+    - {fileID: 4147323708706159959, guid: 7f4290488a40982419007efc8635ad53, type: 3}
+--- !u!4 &566932644
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566932642}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &703069007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1690,3 +1739,4 @@ SceneRoots:
   - {fileID: 2145639816}
   - {fileID: 1579972291}
   - {fileID: 213134359}
+  - {fileID: 566932644}
